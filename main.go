@@ -1,8 +1,7 @@
 package main
 
 import (
-	"error-wrapper/errorwrapper"
-	"errors"
+	"error-wrapper/handlers"
 	"fmt"
 	"net/http"
 )
@@ -15,27 +14,10 @@ func main() {
 }
 
 func setupRoutes() {
-	http.HandleFunc("/user", errorwrapper.WithError(handleThing))
+	http.HandleFunc("/user", handlers.WithError(handlers.HandleUser))
 	http.HandleFunc("/get", testGet)
-
-}
-
-func handleThing(w http.ResponseWriter, r *http.Request) error {
-	fmt.Println("Endpoint hit")
-
-	_, err := getSomething(r)
-	if err != nil {
-		return errorwrapper.BadRequestWithBody(err.Error())
-	}
-
-	w.WriteHeader(http.StatusNoContent)
-	return nil
-}
-
-func getSomething(r *http.Request) (string, error) {
-	return "", errors.New("Invalid parameter")
 }
 
 func testGet(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusNoContent)
+	w.WriteHeader(http.StatusOK)
 }
